@@ -83,15 +83,17 @@ function App() {
       <Header />
       <div className="contents">
         <ContentsTop setData={setData} />
-        <ul className="todolist">
-          {list.map((item, idx) => {
-            return (
-              <li className="todolist__item" key={idx}>
-                {item}
-              </li>
-            );
-          })}
-        </ul>
+        <div class="m-todolist-wrap">
+          <ul className="todolist">
+            {list.map((item, idx) => {
+              return (
+                <li className="todolist__item" key={idx}>
+                  {item}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );

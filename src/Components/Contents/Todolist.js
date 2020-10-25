@@ -27,7 +27,7 @@ const todolist = (props) => {
         </span>
         <span className="count">1일 13시간 33분 남았어요!</span>
         <div className="state">
-          <div className="state-bar" style={{ width: '20%' }}></div>
+          <div className="state-bar" style={{ width: '50%' }}></div>
         </div>
       </div>
       <Fab variant="extended" className="btn btn-primary btn-icon">
