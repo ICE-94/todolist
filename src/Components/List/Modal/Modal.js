@@ -9,12 +9,15 @@ import {
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
+import { updateTodoElement } from '../../../shared/Firebase.config';
+
 const Modal = (props) => {
   const [selectedDate, handleDateChange] = useState(new Date());
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState();
   const [imagePreview, setImagePreview] = useState(null);
+  const [imageList, setImageList] = useState(null);
 
   const handleOnClickCancle = () => {
     props.setModal(null);
@@ -29,7 +32,7 @@ const Modal = (props) => {
         <button className="modal__close-btn btn" onClick={handleOnClickCancle}><CloseIcon /></button>
         <h4 className="modal__tit">일정 등록하기</h4>
         <div className="modal__con">
-          <div class="col-6">
+          <div className="col-6">
             <label className="modal__label">제목</label>
             <input
               placeholder="제목"
@@ -41,9 +44,9 @@ const Modal = (props) => {
               }}
             />
           </div>
-          <div class="col-6">
+          <div className="col-6">
             <label className="modal__label">날짜</label>
-            <div class="custom-datapicker">
+            <div className="custom-datapicker">
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   autoOk
@@ -57,7 +60,7 @@ const Modal = (props) => {
               </MuiPickersUtilsProvider>
             </div>
           </div>
-          <div class="col-12">
+          <div className="col-12">
             <label className="modal__label">내용</label>
             <textarea className="modal__input-txta"
             placeholder="내용"
@@ -73,14 +76,16 @@ const Modal = (props) => {
             <input
               type="file"
               accept="image/png, image/jpeg"
+              multiple
               onChange={(e) => {
                 e.preventDefault(); //이전 값이랑 같으면 동작안함
 
                 if (e.target.files[0] === null && e.target.files[0] === undefined) {
+                  setImageList(null);
                   return;
                 }
-
-                setImage(e.target.files[0]);
+                setImageList(e.target.files);
+                setImage(e.target.files);
                 setImagePreview(
                   <img
                     src={URL.createObjectURL(e.target.files[0])}
@@ -91,6 +96,7 @@ const Modal = (props) => {
               }}
             />
           </label>
+          <span className={imageList !== null ? (imageList.length > 1 ? "image-list" : "image-list hide") : undefined}>{imageList !== null ? (imageList.length > 1 ? imageList.length - 1 : undefined) : undefined}</span>
         </div>
 
         <div className="modal__bottom-btn">
@@ -104,7 +110,21 @@ const Modal = (props) => {
                 startDate: date,
                 image,
               };
+              const _data = {...data};
+              data.image = image[0];
               props.setData(data);
+
+              console.log(_data.image);
+
+              let __data = [];
+
+              Object.values(_data.image).forEach((im) => {
+                __data.push(im.name);
+              })
+
+              _data.image = JSON.stringify(__data);
+
+              updateTodoElement(data);
               handleOnClickCancle();
             }}
           >
